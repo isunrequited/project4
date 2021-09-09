@@ -9,4 +9,10 @@ public class Player extends Charactor {
         super(sub);
         setPlayer();
     }
+
+    // 메서드
+    // 플레이어 회복
+    public void heal() {
+        currentHp += 10;
+    }
 }

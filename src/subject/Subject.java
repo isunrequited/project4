@@ -6,9 +6,9 @@ public class Subject {
     private int hp;
     private int dmg;
     private int skillDmg;
+    private String name;
 
     // 생성자
-
     public Subject() {
     }
 
@@ -19,6 +19,14 @@ public class Subject {
     }
 
     // get, set
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setHp(int hp) {
         this.hp = hp;
     }

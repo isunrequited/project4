@@ -3,11 +3,17 @@ import subject.*;
 
 public class GameManager {
 
-    private boolean isGameOver; // 게임 오버 여부
-    private Player player;
-    private Enemy enemy;
-    private int stage;
-    private boolean gameOverFlag;
+    // 필드 선언부
+    private Player player; // 플레이어 정보
+    private Enemy enemy; // 적 정보
+    private int stage; // 현재 스테이지
+    private boolean gameOverFlag; // 게임 오버 여부
+
+    // 생성자 선언부
+    public GameManager() {
+        stage = 1;
+        gameOverFlag = false;
+    }
 
     // 클래스 선택시 플레이어에게 직업 부여
     public void setPlayerSubject(Subject playerSubject) {
@@ -22,7 +28,16 @@ public class GameManager {
 
     // 적 생성
     private void makeEnemy() {
-        enemy = new Enemy(new Mage());
+        int enemySubSelectRN = (int) (Math.random() * 3);
+        switch (enemySubSelectRN) {
+            case 0:
+                enemy = new Enemy(new Mage());
+            case 1:
+                enemy = new Enemy(new Archer());
+            case 2:
+                enemy = new Enemy(new Warrior());
+            default:
+        }
     }
 
     // 전투시 플레이어와 에너미의 선택을 비교 그에 맞는 결과 실행 결과 반납
@@ -54,6 +69,7 @@ public class GameManager {
         // 스테이지 1상승
         stage++;
         // 플레이어 회복
+        player.heal();
     }
 
     // 게임 오버 판단 여부
@@ -73,4 +89,8 @@ public class GameManager {
         return enemy.info();
     }
 
+    // getter, setter
+    public int getStage() {
+        return stage;
+    }
 }
