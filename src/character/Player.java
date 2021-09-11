@@ -1,8 +1,8 @@
-package charactor;
+package character;
 
 import subject.Subject;
 
-public class Player extends Charactor {
+public class Player extends Character {
 
     public Player(Subject sub) {
         // 플레이어 직업 설정 및 플레이어 설정
@@ -12,7 +12,8 @@ public class Player extends Charactor {
 
     // 메서드
     // 플레이어 회복
-    public void heal() {
+    public void endStage() {
         currentHp += 10;
+        manaCount = 0;
     }
 }

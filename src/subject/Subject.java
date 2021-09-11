@@ -6,16 +6,18 @@ public class Subject {
     private int hp;
     private int dmg;
     private int skillDmg;
+    private int fullMana;
     private String name;
 
     // 생성자
     public Subject() {
     }
 
-    public Subject(int hp, int dmg, int skillDmg) {
+    public Subject(int hp, int dmg, int skillDmg, int fullMana) {
         this.hp = hp;
         this.dmg = dmg;
         this.skillDmg = skillDmg;
+        this.fullMana = fullMana;
     }
 
     // get, set
@@ -49,5 +51,13 @@ public class Subject {
 
     public void setSkillDmg(int skillDmg) {
         this.skillDmg = skillDmg;
+    }
+
+    public int getFullMana() {
+        return fullMana;
+    }
+
+    public void setFullMana(int fullMana) {
+        this.fullMana = fullMana;
     }
 }

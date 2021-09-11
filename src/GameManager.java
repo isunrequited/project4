@@ -1,5 +1,7 @@
-import charactor.*;
+import character.*;
+import character.Character;
 import subject.*;
+
 
 public class GameManager {
 
@@ -8,75 +10,165 @@ public class GameManager {
     private Enemy enemy; // 적 정보
     private int stage; // 현재 스테이지
     private boolean gameOverFlag; // 게임 오버 여부
+    private boolean battleEndFlag;
 
     // 생성자 선언부
     public GameManager() {
-        stage = 1;
+        setGame();
+    }
+
+    // 게임 기본 설정
+    public void setGame() {
+        stage = 0;
         gameOverFlag = false;
     }
 
     // 클래스 선택시 플레이어에게 직업 부여
-    public void setPlayerSubject(Subject playerSubject) {
-        player = new Player(playerSubject);
+    public void setPlayerSubject(int i) {
+        switch (i) {
+            case 1:
+                player = new Player(new Warrior());
+                break;
+            case 2:
+                player = new Player(new Mage());
+                break;
+            case 3:
+                player = new Player(new Archer());
+        }
     }
 
     // 스테이지 시작시 기본 스테이지 설정
     public void setStage() {
-        // 적 생성
-        makeEnemy();
+        stage++; // 스테이지 상승
+        battleEndFlag = false; // 전투 시작
+        makeEnemy(); // 적 생상
     }
 
-    // 적 생성
+    // 적 생성 (랜덤으로 직업 부여)
     private void makeEnemy() {
         int enemySubSelectRN = (int) (Math.random() * 3);
         switch (enemySubSelectRN) {
             case 0:
-                enemy = new Enemy(new Mage());
+                enemy = new Enemy(new Mage()); // 마법사
+                break;
             case 1:
-                enemy = new Enemy(new Archer());
+                enemy = new Enemy(new Archer()); // 궁수
+                break;
             case 2:
-                enemy = new Enemy(new Warrior());
+                enemy = new Enemy(new Warrior()); // 전사
+                break;
             default:
         }
     }
 
-    // 전투시 플레이어와 에너미의 선택을 비교 그에 맞는 결과 실행 결과 반납
-    // 적의 체력이 0이 되면 true 반납
-    public boolean battle(String playerplay) {
-        // 적의 행동 결정(랜덤)
-        decideEnemyPlay();
+    private void endBattle() {
+        // 방어 태세 해제
+        player.resetDefenseMode();
+        enemy.resetDefenseMode();
 
-        // 각자의 행위에 따른 행동 수행
-        // 플레이어 : 공격, 적 : 공격
-        player.attack(enemy);
-        enemy.attack(player);
-
-        // 플레이어 : 방어, 적 : 공격
-        // -----
-
-        isGameOver(); // 플레이어 사망(게임 오버) 확인
-        if(enemy.getDieFlag()) return true; // 적이 사망하면 true 반환
-
-        return false; // 적을 죽이지 못했다면 false반환
+        checkPlayerDie(); // 플레이어 사망(게임 오버) 확인
+        checkEnemyDie(); // 전투 종료 확인
     }
 
-    // 적의 행동 결정(랜덤)
+    // 적 행위 결정
     private String decideEnemyPlay() {
-        return null;
-    }
-
-    public void endStage() {
-        // 스테이지 1상승
-        stage++;
-        // 플레이어 회복
-        player.heal();
-    }
-
-    // 게임 오버 판단 여부
-    private void isGameOver() {
-        if (player.getDieFlag()) {
-             gameOverFlag = true;
+        int enemyPlay;
+        while(true) {
+            enemyPlay = (int) (Math.random() * 4) + 1;
+            if(enemyPlay == 4 && checkPossibleUseSkill(enemy) != 0) { // 스킬공격이지만 스킬 게이지가 다 차지 않았으면 재선택
+                continue;
+            }
+            break;
         }
+
+        switch (enemyPlay) {
+            case 1: // 공격
+                return enemy.attack(player);
+            case 2: // 방어
+                return enemy.defense();
+            case 3: // 마나 회복
+                return enemy.addMana();
+            case 4: // 스킬
+                return enemy.skill(player);
+            default:
+                return null;
+        }
+    }
+
+    // 플레이어 공격 시
+    public String playerAttack() {
+        // 적 행위 상황 - 방어 상태 일 수도 있기에 먼저 행함
+        String enemyAction = decideEnemyPlay();
+        // 플레이어 행위 상황
+        String playerAction = player.attack(enemy);
+
+        endBattle();
+        return playerAction + "\n" + enemyAction;
+    }
+
+    // 플레이어 방어 시
+    public String playerDefense() {
+        
+        // 플레이어 행위 상황 - 방어는 적보다 먼저 행해야 함
+        String playerAction = player.defense();
+        // 적 행위 상황
+        String enemyAction = decideEnemyPlay();
+
+        endBattle();
+        return playerAction + "\n" + enemyAction;
+    }
+
+    // 플레이어 마나 회복 시
+    public String playerAddMana() {
+        // 플레이어 행위 상황
+        String playerAction = player.addMana();
+        // 적 행위 상황
+        String enemyAction = decideEnemyPlay();
+
+        endBattle();
+        return playerAction + "\n" + enemyAction;
+    }
+
+    // 플레이어 스킬 사용시
+    public String playerUseSkill() {
+        // 플레이어 행위 상황
+        String playerAction = player.skill(enemy);
+        // 적 행위 상황
+        String enemyAction = decideEnemyPlay();
+
+        endBattle();
+        return playerAction + "\n" + enemyAction;
+    }
+
+    // 스테이지 종료
+    public void endStage() {
+        player.endStage(); // 플레이어 회복 및 마나 게이지 초기화
+    }
+
+    // 플레이어의 체력이 0이 되면 전투 및 게임 종료
+    private void checkPlayerDie() {
+        if (player.isDieFlag()) {
+            battleEndFlag = true; // 전투 종료
+            gameOverFlag = true; // 게임 종료
+        }
+    }
+
+    // 적의 체력이 0이 되면 전투 종료
+    private void checkEnemyDie() {
+        if (enemy.isDieFlag()) {
+            battleEndFlag = true; // 전투 종료
+        }
+    }
+
+    // 캐릭터의 스킬 사용 가능 확인
+    // 사용 가능시 0반환 또는 스킬 사용 가능 까지 남은 마나 회복 횟수 반환
+    private int checkPossibleUseSkill(Character character) {
+        return character.checkPossibleUseSkill();
+    }
+
+    // 플레이어의 남은 마나 게이지를 String 으로 반환
+    public int playerLackMana() {
+        return checkPossibleUseSkill(player);
     }
 
     // 플레이어 정보 반환
@@ -92,5 +184,13 @@ public class GameManager {
     // getter, setter
     public int getStage() {
         return stage;
+    }
+
+    public boolean isBattleEndFlag() {
+        return battleEndFlag;
+    }
+
+    public boolean isGameOverFlag() {
+        return gameOverFlag;
     }
 }
