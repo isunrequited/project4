@@ -2,7 +2,10 @@ import character.*;
 import character.Character;
 import subject.*;
 
-
+// 실제 게임이 실행되고 돌아가기 위한 데이터들을 관리하는 역할
+// 플레이어, 적의 데이터를 관리
+// 전투를 실행하여 결과값을 반환 - 실제로 전투가 돌아가는 부분
+// 스테이지 설정 등, 게임의 기본 데이터 관리
 public class GameManager {
 
     // 필드 선언부
@@ -10,7 +13,7 @@ public class GameManager {
     private Enemy enemy; // 적 정보
     private int stage; // 현재 스테이지
     private boolean gameOverFlag; // 게임 오버 여부
-    private boolean battleEndFlag;
+    private boolean battleEndFlag; // 전투 종료 여부
 
     // 생성자 선언부
     public GameManager() {
@@ -26,13 +29,13 @@ public class GameManager {
     // 클래스 선택시 플레이어에게 직업 부여
     public void setPlayerSubject(int i) {
         switch (i) {
-            case 1:
+            case 1: // 전사
                 player = new Player(new Warrior());
                 break;
-            case 2:
+            case 2: // 마법사
                 player = new Player(new Mage());
                 break;
-            case 3:
+            case 3: // 궁수
                 player = new Player(new Archer());
         }
     }
@@ -61,6 +64,12 @@ public class GameManager {
         }
     }
 
+    // 스테이지 종료시 하는 것
+    public void endStage() {
+        player.endStage(); // 플레이어 회복 및 마나 게이지 초기화
+    }
+
+    // 전투가 끝날때 마다 해야 하는 것
     private void endBattle() {
         // 방어 태세 해제
         player.resetDefenseMode();
@@ -68,6 +77,21 @@ public class GameManager {
 
         checkPlayerDie(); // 플레이어 사망(게임 오버) 확인
         checkEnemyDie(); // 전투 종료 확인
+    }
+
+    // 플레이어의 체력이 0이 되면 전투 및 게임 종료
+    private void checkPlayerDie() {
+        if (player.isDieFlag()) {
+            battleEndFlag = true; // 전투 종료
+            gameOverFlag = true; // 게임 종료
+        }
+    }
+
+    // 적의 체력이 0이 되면 전투 종료
+    private void checkEnemyDie() {
+        if (enemy.isDieFlag()) {
+            battleEndFlag = true; // 전투 종료
+        }
     }
 
     // 적 행위 결정
@@ -138,26 +162,6 @@ public class GameManager {
 
         endBattle();
         return playerAction + "\n" + enemyAction;
-    }
-
-    // 스테이지 종료
-    public void endStage() {
-        player.endStage(); // 플레이어 회복 및 마나 게이지 초기화
-    }
-
-    // 플레이어의 체력이 0이 되면 전투 및 게임 종료
-    private void checkPlayerDie() {
-        if (player.isDieFlag()) {
-            battleEndFlag = true; // 전투 종료
-            gameOverFlag = true; // 게임 종료
-        }
-    }
-
-    // 적의 체력이 0이 되면 전투 종료
-    private void checkEnemyDie() {
-        if (enemy.isDieFlag()) {
-            battleEndFlag = true; // 전투 종료
-        }
     }
 
     // 캐릭터의 스킬 사용 가능 확인

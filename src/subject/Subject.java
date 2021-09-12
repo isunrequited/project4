@@ -1,5 +1,9 @@
 package subject;
 
+// 직업정보 클래스
+// 직업의 정보를 담고있을 뿐 이 class 가 움직이는 것은 아님
+// ex) 변호사, 판사, 선생님 등등 그저 직업정보만 가짐
+// 결국 사람이 위의 직업을 가지고 그에 맡는 행위를 하듯이
 public class Subject {
 
     // 필드 선언부
@@ -20,6 +24,12 @@ public class Subject {
         this.fullMana = fullMana;
     }
 
+    // 메서드
+    // 직업 정보
+    public String info() {
+        return null;
+    }
+    
     // get, set
     public String getName() {
         return name;

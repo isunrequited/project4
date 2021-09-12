@@ -2,6 +2,9 @@ package character;
 
 import subject.Subject;
 
+// 실제 행위를 하는 class
+// 실제 사람이라고 생각하면 됨
+// 움직이고, 공격하고, 직업을 가지고, 방어하고, 등등 행위를 함
 public class Character {
 
     // 필드 선언부

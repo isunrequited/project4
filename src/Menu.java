@@ -1,5 +1,9 @@
 import java.util.Scanner;
 
+// 사용자에게 보여주는 모든 화면, 텍스트
+// 사용자에게 입력을 받아 입력 값을 gm 에게 전달해주는 역할
+// gm 으로부터 받은 데이터를 사용자에게 보여주는 역할
+// 직접 데이터를 조작하지는 않는다.
 public class Menu {
 
     private final Scanner sc = new Scanner(System.in);

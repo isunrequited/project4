@@ -1,3 +1,4 @@
+// 게임을 실행하는 역할
 public class GamePlay {
 
     public static void main(String[] args) {
