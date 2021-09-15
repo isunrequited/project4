@@ -4,10 +4,10 @@ import subject.Subject;
 
 public class Player extends Character {
 
-    public Player(Subject sub) {
+    public Player(Subject sub, String name) {
         // 플레이어 직업 설정 및 플레이어 설정
         super(sub);
-        setPlayer();
+        setPlayer(name);
     }
 
     // 메서드

@@ -23,8 +23,8 @@ public class Character {
 
     // 메서드 선언부
     // 플레이어 설정
-    protected void setPlayer() {
-        name = "플레이어";
+    protected void setPlayer(String name) {
+        this.name = name;
     }
 
     // 적 설정

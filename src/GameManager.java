@@ -14,29 +14,74 @@ public class GameManager {
     private int stage; // 현재 스테이지
     private boolean gameOverFlag; // 게임 오버 여부
     private boolean battleEndFlag; // 전투 종료 여부
+    private ClearUser[] ranking; // 유저 랭킹
 
     // 생성자 선언부
     public GameManager() {
+        ranking = new ClearUser[5];
+        ranking[0] = new ClearUser(5, "cyh");
+        ranking[1] = new ClearUser(2, "cyh1");
+        ranking[2] = new ClearUser(4, "cyh3");
+        ranking[3] = new ClearUser(6, "cyh4");
+        ranking[4] = new ClearUser(5, "cyh5");
         setGame();
     }
 
+    // 직업 정보 표시
+    public String subInfo() {
+        return new Warrior().info() + "\n" + new Archer().info() + "\n" + new Mage().info();
+    }
+
+    // 랭킹 표시
+    // 공동 순위 표시, ex 1,1 -> 3
+    public void showRanking() {
+
+        int rankNum = 1;
+        System.out.printf("%d위 | 닉네임 : %s | 최종 스테이지 : %d\n", rankNum, ranking[0].getName(), ranking[0].getStage());
+
+        for (int i = 1; i < ranking.length; i++) {
+            if (ranking[i].getStage() == ranking[i - 1].getStage()) {
+                System.out.printf("%d위 | 닉네임 : %s | 최종 스테이지 : %d\n", rankNum, ranking[i].getName(), ranking[i].getStage());
+            } else {
+                rankNum = i + 1;
+                System.out.printf("%d위 | 닉네임 : %s | 최종 스테이지 : %d\n", rankNum, ranking[i].getName(), ranking[i].getStage());
+            }
+        }
+    }
+
+    // 랭킹 정렬
+    // ranking 변수에 들어있는 값들을 클리어 스테이지가 높은 순으로 정렬
+    void sortRanking() {
+
+        for (int i = 0; i < ranking.length; i++) {
+            for (int j = i + 1; j < ranking.length; j++) {
+                if (ranking[i].getStage() < ranking[j].getStage()) {
+                    ClearUser temp = ranking[i];
+                    ranking[i] = ranking[j];
+                    ranking[j] = temp;
+                }
+            }
+        }//for i end
+    }//sortRanking end
+
     // 게임 기본 설정
     public void setGame() {
+        sortRanking();
         stage = 0;
         gameOverFlag = false;
     }
 
     // 클래스 선택시 플레이어에게 직업 부여
-    public void setPlayerSubject(int i) {
+    public void setPlayerSubject(int i, String name) {
         switch (i) {
             case 1: // 전사
-                player = new Player(new Warrior());
+                player = new Player(new Warrior(), name);
                 break;
             case 2: // 마법사
-                player = new Player(new Mage());
+                player = new Player(new Mage(), name);
                 break;
             case 3: // 궁수
-                player = new Player(new Archer());
+                player = new Player(new Archer(), name);
         }
     }
 
@@ -82,6 +127,17 @@ public class GameManager {
     // 플레이어의 체력이 0이 되면 전투 및 게임 종료
     private void checkPlayerDie() {
         if (player.isDieFlag()) {
+            ClearUser[] tempRanking = new ClearUser[ranking.length + 1];
+
+            for (int i = 0; i < ranking.length; i++) {
+                tempRanking[i] = ranking[i];
+            }
+
+            tempRanking[tempRanking.length - 1] = new ClearUser(stage, player.getName());
+
+            ranking = tempRanking;
+            sortRanking();
+
             battleEndFlag = true; // 전투 종료
             gameOverFlag = true; // 게임 종료
         }

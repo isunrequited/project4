@@ -5,6 +5,7 @@ public class GamePlay {
 
         Menu menu = new Menu();
         menu.mainMenu();
+
     }
 }
 

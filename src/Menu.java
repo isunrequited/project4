@@ -13,17 +13,33 @@ public class Menu {
     public Menu() {
     }
 
+    // 숫자 입력(메뉴, 전투)
+    public int inputNum() {
+        while(true) {
+            int menuNum = 0;
+            try {
+                System.out.print(">> ");
+                menuNum = sc.nextInt();
+                return menuNum;
+            } catch (Exception e) {
+                System.out.println("숫자를 입력해주세요!");
+                sc.nextLine();
+            }
+        }
+    }
+
+    // 메인 메뉴
     public void mainMenu() {
 
         //메뉴 시작 메서드
         while (true) {
 
-            System.out.println("1. 게임 시작");
+            System.out.println("\n1. 게임 시작");
             System.out.println("2. 캐릭터 조회");
+            System.out.println("3. 랭킹 조회");
             System.out.println("0. 프로그램 종료");
 
-            System.out.print("# 메뉴 번호: ");
-            int menuNum = sc.nextInt();
+            int menuNum = inputNum();
             System.out.println();
 
             switch (menuNum){
@@ -45,12 +61,19 @@ public class Menu {
                 case 2:
                     viewCharacter();
                     break;
+                case 3:
+                    System.out.println("랭킹을 조회합니다.");
+                    gm.showRanking();
+                    break;
                 case 0:
                     System.out.println("프로그램을 종료합니다.");
+                    sc.close();
                     System.exit(0);//프로그램 종료
                 default:
                     System.out.println("메뉴를 잘못 입력했습니다.");
             }//switch end
+
+
         }//while(true) end
     }//Menu end
 
@@ -58,35 +81,37 @@ public class Menu {
     private void gameStart() {
         while (true) {
             System.out.println("\n# 게임을 시작합니다.");
-            int select;   //선택한 캐릭터 입력 변수
+            int classSelect;   //선택한 캐릭터 입력 변수
 
             System.out.println("캐릭터를 선택하여 주세요.");
             System.out.println("1. 전사");
             System.out.println("2. 마법사");
             System.out.println("3. 궁수");
-            System.out.print("클래스 선택 : ");
-            select = sc.nextInt();
+            System.out.print("클래스 선택 ");
+            classSelect = inputNum();
+            System.out.print("닉네임 입력 : ");
+            String name = sc.next();
 
-            switch (select) {
+            switch (classSelect) {
                 case 1:
                     System.out.println("전사를 선택하였습니다.");
-                    gm.setPlayerSubject(1);
+                    gm.setPlayerSubject(1, name);
                     //# 캐릭터 별 함수 넣는 곳. 추후 수정 예정=======================
                     break;
                 case 2:
                     System.out.println("마법사를 선택하였습니다.");
-                    gm.setPlayerSubject(2);
+                    gm.setPlayerSubject(2, name);
                     //# 캐릭터 별 함수 넣는 곳. 추후 수정 예정=======================
                     break;
                 case 3:
                     System.out.println("궁사를 선택하였습니다.");
-                    gm.setPlayerSubject(3);
+                    gm.setPlayerSubject(3, name);
                     //# 캐릭터 별 함수 넣는 곳. 추후 수정 예정=======================
                     break;
                 default:
                     System.out.println("잘못된 입력입니다.");
+                    continue;
             }//switch end
-
             // 게임오버할 때 까지 스테이지 반복
             while(true) {
                 stage();
@@ -96,12 +121,13 @@ public class Menu {
                     break;
                 }
             }
+            break;
         }//while true end
     }//gameStart end
 
     //======================== 2. 캐릭터 조회 메서드(캐릭터별 스탯을 미리 확인할 수 있음) ========================
     private void viewCharacter() {
-
+        System.out.println(gm.subInfo());
     }
 
     // 스테이지 끝날 때 메세지
@@ -125,6 +151,7 @@ public class Menu {
                 return;
             } else if(answer.equalsIgnoreCase("n")) { // 프로그램 종료
                 System.out.println("프로그램을 종료합니다.");
+                sc.close();
                 System.exit(0);//프로그램 종료
             } else {
                 System.out.println("잘못된 입력입니다.");
@@ -155,8 +182,7 @@ public class Menu {
             System.out.println("1. 공격");
             System.out.println("2. 방어");
             checkPossibleUseSkill();
-            System.out.print("선택 : ");
-            int selectPlay = sc.nextInt();
+            int selectPlay = inputNum();
             sc.nextLine();
 
             System.out.println();

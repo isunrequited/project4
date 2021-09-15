@@ -5,4 +5,5 @@ public class Archer extends Subject{
         super(100, 20, 10,3);
         setName("궁수");
     }
+
 }

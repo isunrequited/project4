@@ -27,7 +27,7 @@ public class Subject {
     // 메서드
     // 직업 정보
     public String info() {
-        return null;
+        return String.format("%s | 체력 : %d | 공격력 : %d | 스킬 공격력 : %d | 마나 게이지 : %d", getName(), getHp(), getDmg(), getSkillDmg(), getFullMana());
     }
     
     // get, set
