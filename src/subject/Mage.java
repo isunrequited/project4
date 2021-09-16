@@ -3,7 +3,7 @@ package subject;
 public class Mage extends Subject{
 
     public Mage() {
-        super(100, 10, 20, 2);
+        super(10, 5, 15, 2);
         setName("마법사");
     }
 

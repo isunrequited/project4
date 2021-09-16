@@ -83,14 +83,16 @@ public class Menu {
             System.out.println("\n# 게임을 시작합니다.");
             int classSelect;   //선택한 캐릭터 입력 변수
 
-            System.out.println("캐릭터를 선택하여 주세요.");
+            System.out.print("닉네임 입력 >> ");
+            String name = sc.next();
+
+            System.out.println();
+            System.out.println("직업을 선택하여 주세요.");
             System.out.println("1. 전사");
             System.out.println("2. 마법사");
             System.out.println("3. 궁수");
-            System.out.print("클래스 선택 ");
+            System.out.print("직업 선택 ");
             classSelect = inputNum();
-            System.out.print("닉네임 입력 : ");
-            String name = sc.next();
 
             switch (classSelect) {
                 case 1:

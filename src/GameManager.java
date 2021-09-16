@@ -40,12 +40,10 @@ public class GameManager {
         System.out.printf("%d위 | 닉네임 : %s | 최종 스테이지 : %d\n", rankNum, ranking[0].getName(), ranking[0].getStage());
 
         for (int i = 1; i < ranking.length; i++) {
-            if (ranking[i].getStage() == ranking[i - 1].getStage()) {
-                System.out.printf("%d위 | 닉네임 : %s | 최종 스테이지 : %d\n", rankNum, ranking[i].getName(), ranking[i].getStage());
-            } else {
+            if (ranking[i].getStage() != ranking[i - 1].getStage()) {
                 rankNum = i + 1;
-                System.out.printf("%d위 | 닉네임 : %s | 최종 스테이지 : %d\n", rankNum, ranking[i].getName(), ranking[i].getStage());
             }
+            System.out.printf("%d위 | 닉네임 : %s | 최종 스테이지 : %d\n", rankNum, ranking[i].getName(), ranking[i].getStage());
         }
     }
 
